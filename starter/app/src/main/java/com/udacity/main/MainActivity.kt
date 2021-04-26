@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
             download()
         }
 
+        // Register callback receiver
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
     }
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
-        private const val CHANNEL_ID = "channelId"
+
     }
 
 }
