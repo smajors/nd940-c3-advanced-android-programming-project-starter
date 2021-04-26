@@ -31,24 +31,27 @@
         app:layout_constraintTop_toBottomOf="@+id/download_image_view">
 
         <RadioButton
+            android:id="@+id/id_glide"
             style="@style/CustomRadioButton"
-            android:layout_marginTop="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:text="@string/download_glide" />
 
         <RadioButton
+            android:id="@+id/id_loadapp"
             style="@style/CustomRadioButton"
-            android:layout_marginTop="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:text="@string/download_loadapp" />
 
         <RadioButton
+            android:id="@+id/id_retrofit"
             style="@style/CustomRadioButton"
-            android:layout_marginTop="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:text="@string/download_retrofit" />
     </RadioGroup>
 
