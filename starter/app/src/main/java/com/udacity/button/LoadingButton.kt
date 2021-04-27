@@ -3,8 +3,12 @@ package com.udacity.button
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
+import com.udacity.R
 import com.udacity.button.ButtonState
 import kotlin.properties.Delegates
 
@@ -20,14 +24,27 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textAlign = Paint.Align.CENTER
+        textSize = 55.0f
+        typeface = Typeface.DEFAULT
+    }
+
 
     init {
-
+        // Set clickable
+        isClickable = true
     }
 
 
     override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
+        //super.onDraw(canvas)
+        paint.color = Color.WHITE
+        canvas?.drawColor(context.getColor(R.color.colorPrimary))
+        canvas?.drawText(context.getString(R.string.download),
+            widthSize / 2f, (heightSize / 2f) + ((paint.descent() - paint.ascent()) / 2) - paint.descent(), paint)
+
 
     }
 

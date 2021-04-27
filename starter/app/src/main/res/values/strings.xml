@@ -19,4 +19,6 @@
     <string name="download_channel_desc">Shows download status</string>
 
     <string name="download_error">Please select a file to download.</string>
+
+    <string name="download">Download</string>
 </resources>
