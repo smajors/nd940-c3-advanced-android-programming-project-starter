@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.R
+import com.udacity.button.ButtonState
 import com.udacity.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Timber.d("File download complete.")
+            // File's done. Set button state to completed.
+            binding.contentMain.loadButton.setState(ButtonState.Completed)
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
         }
     }
@@ -70,6 +73,8 @@ class MainActivity : AppCompatActivity() {
      * Downloads a file based on the selection given by the user from the radio group
      */
     private fun download() {
+        // Set click state. As of now this does nothing but it is handled internally
+        binding.contentMain.loadButton.setState(ButtonState.Clicked)
         try {
             // Parse will throw an exception if a selection has not been made
             val request =
@@ -81,6 +86,8 @@ class MainActivity : AppCompatActivity() {
                     .setAllowedOverRoaming(true)
 
             val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            // Set button loading state
+            binding.contentMain.loadButton.setState(ButtonState.Loading)
             downloadID =
                 downloadManager.enqueue(request)// enqueue puts the download request in the queue.
         }
