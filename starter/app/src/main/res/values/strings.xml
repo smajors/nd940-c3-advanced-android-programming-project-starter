@@ -21,4 +21,7 @@
     <string name="download_error">Please select a file to download.</string>
 
     <string name="download">Download</string>
+
+    <string name="download_active">File Is Downloading</string>
+    <string name="download_finished">File Downloaded</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.udacity.button
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
@@ -32,21 +34,28 @@ class LoadingButton @JvmOverloads constructor(
     // Value for button
     private var percentage = 0f
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Undefined) { p, old, new ->
         when (buttonState) {
             ButtonState.Loading -> {
                 // Set animator set as started
                 Timber.d("Button loading state is active")
                 animators.playTogether(buttonAnimator)
                 animators.start()
+                // Disable control
+                isEnabled = false
             }
             ButtonState.Completed -> {
                 // Cancel animations
                 Timber.d("Button completed state is active")
                 animators.cancel()
+                // Enable control
+                isEnabled = true
             }
             ButtonState.Clicked -> {
                 Timber.d("Button clicked state is active")
+            }
+            ButtonState.Undefined -> {
+                Timber.d("Button state is undefined.")
             }
         }
     }
@@ -86,11 +95,28 @@ class LoadingButton @JvmOverloads constructor(
             canvas?.drawRect(0f, 0f, percentage, heightSize.toFloat(), paint)
         }
         paint.color = Color.WHITE
-        canvas?.drawText(context.getString(R.string.download),
+        // Determine which text to write
+        val text = when (buttonState) {
+            ButtonState.Undefined -> {
+                context.getString(R.string.download)
+            }
+            ButtonState.Loading -> {
+                context.getString(R.string.download_active)
+            }
+            ButtonState.Completed -> {
+                context.getString(R.string.download_finished)
+            }
+            else -> {
+                // Clicked does not get its own text
+                context.getString(R.string.download)
+            }
+        }
+        canvas?.drawText(text,
             widthSize / 2f, (heightSize / 2f) + ((paint.descent() - paint.ascent()) / 2) - paint.descent(), paint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        Timber.d("View is being measured.")
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
         val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
         val h: Int = resolveSizeAndState(
@@ -106,10 +132,20 @@ class LoadingButton @JvmOverloads constructor(
             repeatMode = ValueAnimator.REVERSE
             repeatCount = ValueAnimator.INFINITE
             interpolator = linearInterpolator
+            // Listener for updating the value of the animation
             addUpdateListener {
                 percentage = it.animatedValue as Float
                 invalidate()
             }
+
+            // Listen for animator end to reset the animation state
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    Timber.d("Animation has ended. Invalidating view.")
+                    percentage = 0f
+                    invalidate()
+                }
+            })
 
         }
     }
