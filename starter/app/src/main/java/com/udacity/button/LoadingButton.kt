@@ -93,6 +93,15 @@ class LoadingButton @JvmOverloads constructor(
         // If the button state is current loading, create animation effect
         if (buttonState == ButtonState.Loading) {
             canvas?.drawRect(0f, 0f, percentage, heightSize.toFloat(), paint)
+            // Update paint for circle
+            paint.color = Color.argb(250, 250, 250, 10)
+            canvas?.drawArc(widthSize - heightSize * 0.75f,
+                            heightSize * 0.25f,
+                            widthSize - heightSize * 0.25f,
+                            heightSize * 0.75f,
+                            // Offset sweepangle normalized from width of view
+                             270f, 135 * percentage / 360, true, paint)
+
         }
         paint.color = Color.WHITE
         // Determine which text to write
