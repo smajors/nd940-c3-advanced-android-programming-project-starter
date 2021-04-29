@@ -12,9 +12,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.udacity.R
 import com.udacity.button.ButtonState
 import com.udacity.databinding.ActivityMainBinding
+import com.udacity.utils.DownloadStatusAttributes
+import com.udacity.utils.sendNotification
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
     private lateinit var URL: String
+
+    private lateinit var downloadManager: DownloadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +63,9 @@ class MainActivity : AppCompatActivity() {
         // Register callback receiver
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        // Create download manager
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -66,6 +74,44 @@ class MainActivity : AppCompatActivity() {
             // File's done. Set button state to completed.
             binding.contentMain.loadButton.setState(ButtonState.Completed)
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            // Check to see if an error occurred.
+            val query = DownloadManager.Query()
+            query.setFilterById(id!!)
+            val cursor = downloadManager.query(query)
+            // Set downloaded file
+            val downloadedFile: String = when (URL) {
+                LOADAPP_URL -> {
+                    getString(R.string.download_loadapp)
+                }
+                GLIDE_URL -> {
+                    getString(R.string.download_glide)
+                }
+                RETROFIT_URL -> {
+                    getString(R.string.download_retrofit)
+                }
+                else -> {
+                    // This should never happen
+                    "null"
+                }
+            }
+            // Set initial status to failed
+            var success = false
+            if (cursor.moveToFirst()) {
+                val colIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                val status = cursor.getInt(colIndex)
+
+                // We don't actually need to do much with these statuses. We just need to show that
+                // the file was not successfully downloaded in DetailActivity
+                if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                    success = true
+                }
+            }
+
+            // We now have the data we need. Create the notification
+            val attrs = DownloadStatusAttributes(downloadedFile, success)
+
+            val notificationManager = ContextCompat.getSystemService(applicationContext, NotificationManager::class.java) as NotificationManager
+            notificationManager.sendNotification(attrs, applicationContext)
         }
     }
 
@@ -85,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                     .setAllowedOverMetered(true)
                     .setAllowedOverRoaming(true)
 
-            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             // Set button loading state
             binding.contentMain.loadButton.setState(ButtonState.Loading)
             downloadID =

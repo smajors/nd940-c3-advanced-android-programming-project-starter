@@ -54,7 +54,7 @@ class MainApplication : Application() {
     }
 
     companion object {
-        private const val CHANNEL_ID = "testDownloadChannelId"
-        private const val CHANNEL_NAME = "DownloadStatus"
+        const val CHANNEL_ID = "testDownloadChannelId"
+        const val CHANNEL_NAME = "DownloadStatus"
     }
 }

@@ -24,4 +24,6 @@
 
     <string name="download_active">File Is Downloading</string>
     <string name="download_finished">File Downloaded</string>
+
+    <string name="check_status">Check Status</string>
 </resources>
