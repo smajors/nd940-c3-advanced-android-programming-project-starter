@@ -26,4 +26,8 @@
     <string name="download_finished">File Downloaded</string>
 
     <string name="check_status">Check Status</string>
+
+    <string name="detail_filename">Filename Downloaded: %s</string>
+    <string name="detail_success">Success: %s</string>
+    <string name="okay">Okay</string>
 </resources>
