@@ -17,7 +17,7 @@ import com.udacity.main.MainActivity
 import timber.log.Timber
 import java.io.Serializable
 
-private const val NOTIFICATION_ID = -65535
+const val NOTIFICATION_ID = -65535
 
 const val DATA_EXTRAS = "data_extras"
 

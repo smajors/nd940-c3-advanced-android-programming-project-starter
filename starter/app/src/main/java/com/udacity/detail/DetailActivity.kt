@@ -1,5 +1,6 @@
 package com.udacity.detail
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import com.udacity.databinding.ActivityDetailBinding
 import com.udacity.main.MainActivity
 import com.udacity.utils.DATA_EXTRAS
 import com.udacity.utils.DownloadStatusAttributes
+import com.udacity.utils.NOTIFICATION_ID
 import kotlinx.android.synthetic.main.activity_detail.*
 import timber.log.Timber
 import java.util.*
@@ -24,6 +26,10 @@ class DetailActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         setSupportActionBar(toolbar)
+
+        // Cancel notification
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.cancel(NOTIFICATION_ID)
 
         // The intent should always be there and the extras should be attached
         val obj = intent!!.getSerializableExtra(DATA_EXTRAS) as DownloadStatusAttributes
