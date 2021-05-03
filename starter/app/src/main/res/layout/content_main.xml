@@ -72,7 +72,10 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:defaultBackgroundColor="@color/colorPrimary"
+        app:defaultCircleColor="@color/circleYellow"
+        app:defaultTextSize="55.0"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

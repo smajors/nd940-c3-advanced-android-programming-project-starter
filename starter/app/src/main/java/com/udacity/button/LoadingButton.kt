@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -12,9 +13,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.Button
 import com.udacity.R
-import com.udacity.button.ButtonState
 import timber.log.Timber
 import kotlin.properties.Delegates
 
@@ -33,6 +32,8 @@ class LoadingButton @JvmOverloads constructor(
     private val linearInterpolator = LinearInterpolator()
     // Value for button
     private var percentage = 0f
+
+    private lateinit var attributes: TypedArray
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Undefined) { p, old, new ->
         when (buttonState) {
@@ -70,7 +71,6 @@ class LoadingButton @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
-        textSize = 55.0f
         typeface = Typeface.DEFAULT
     }
 
@@ -82,19 +82,25 @@ class LoadingButton @JvmOverloads constructor(
         animators.apply {
             duration = 2500
         }
+
+        attributes = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
     }
 
 
     override fun onDraw(canvas: Canvas?) {
         // Make sure to draw things in order so the Z order of items do not get messed up.
         // Draw background first, then animated backgrounds/objects, then text
+        val bgColor = attributes.getColor(R.styleable.LoadingButton_defaultBackgroundColor, 0)
+        val circleColor = attributes.getColor(R.styleable.LoadingButton_defaultCircleColor, 0)
+        val textSize = attributes.getFloat(R.styleable.LoadingButton_defaultTextSize, 50.0f)
+        // Foreground animation color rectangle
         paint.color = Color.argb(128, 12, 199, 25)
-        canvas?.drawColor(context.getColor(R.color.colorPrimary))
+        canvas?.drawColor(bgColor)
         // If the button state is current loading, create animation effect
         if (buttonState == ButtonState.Loading) {
             canvas?.drawRect(0f, 0f, percentage, heightSize.toFloat(), paint)
             // Update paint for circle
-            paint.color = Color.argb(250, 250, 250, 10)
+            paint.color = circleColor
             canvas?.drawArc(widthSize - heightSize * 0.75f,
                             heightSize * 0.25f,
                             widthSize - heightSize * 0.25f,
@@ -104,6 +110,7 @@ class LoadingButton @JvmOverloads constructor(
 
         }
         paint.color = Color.WHITE
+        paint.textSize = textSize
         // Determine which text to write
         val text = when (buttonState) {
             ButtonState.Undefined -> {
