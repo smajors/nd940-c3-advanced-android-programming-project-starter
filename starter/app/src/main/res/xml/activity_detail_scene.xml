@@ -58,8 +58,8 @@
             app:layout_constraintTop_toBottomOf="@+id/textview_filename"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="32dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
         <Constraint
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,9 +67,9 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="128dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="32dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="0dp" />
     </ConstraintSet>
     <Transition
         app:constraintSetStart="@+id/start_okay_button"

@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.VectorDrawable
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -13,10 +15,17 @@ import com.udacity.R
 import com.udacity.detail.DetailActivity
 import com.udacity.main.MainActivity
 import timber.log.Timber
+import java.io.Serializable
 
 private const val NOTIFICATION_ID = -65535
 
-data class DownloadStatusAttributes(val downloadType: String, val success: Boolean)
+const val DATA_EXTRAS = "data_extras"
+
+/**
+ * Implementing Serializable interface to allow sending the class between objects
+ */
+data class DownloadStatusAttributes(val downloadType: String?, val success: Boolean) : Serializable
+
 /**
  * Sends a notification to the Android slide down message area with an intent
  */
@@ -37,8 +46,12 @@ fun NotificationManager.sendNotification(obj: DownloadStatusAttributes, context:
 
     // Set action intent for button in intent
     Timber.d("Action intent creation")
-    val actionIntent = Intent(context, DetailActivity::class.java)
-    val actionPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val actionIntent = Intent(context, DetailActivity::class.java).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    }
+    // Add object to intent
+    actionIntent.putExtra(DATA_EXTRAS, obj)
+    val actionPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID+1, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
     // Build notification
     val builder = NotificationCompat.Builder(context, MainApplication.CHANNEL_ID)

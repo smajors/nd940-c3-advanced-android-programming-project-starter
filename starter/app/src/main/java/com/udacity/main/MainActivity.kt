@@ -19,7 +19,6 @@ import com.udacity.databinding.ActivityMainBinding
 import com.udacity.utils.DownloadStatusAttributes
 import com.udacity.utils.sendNotification
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
 
 
